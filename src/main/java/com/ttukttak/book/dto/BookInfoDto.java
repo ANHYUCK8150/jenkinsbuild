@@ -16,7 +16,7 @@ import lombok.Setter;
 public class BookInfoDto {
 	private String name;
 	private String description;
-	private String publishedDate;
+	private Date publishedDate;
 	private int price;
 	private String image;
 	private String publisher;
@@ -26,7 +26,7 @@ public class BookInfoDto {
 	public BookInfoDto(BookInfo bookInfo) {
 		this.name = bookInfo.getName();
 		this.description = bookInfo.getDescription();
-		this.publishedDate = bookInfo.getPublishedDate().toString();
+		this.publishedDate = bookInfo.getPublishedDate();
 		this.price = bookInfo.getPrice();
 		this.image = bookInfo.getImage();
 		this.publisher = bookInfo.getPublisher();
@@ -34,23 +34,16 @@ public class BookInfoDto {
 		this.isbn = bookInfo.getIsbn();
 	}
 
-	public BookInfo toEntity() {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-		Date date = null;
-		try {
-			date = formatter.parse(publishedDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return BookInfo.builder()
-			.name(name)
-			.description(description)
-			.publishedDate(date)
-			.price(price)
-			.image(image)
-			.publisher(publisher)
-			.author(author)
-			.isbn(isbn)
-			.build();
+	public BookInfoDto(BookUploadRequest uploadRequest) throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		this.name = uploadRequest.getName();
+		this.description = uploadRequest.getDescription();
+		this.publishedDate = formatter.parse(uploadRequest.getPublishedDate().toString());
+		this.price = uploadRequest.getPrice();
+		this.image = uploadRequest.getImage();
+		this.publisher = uploadRequest.getPublisher();
+		this.author = uploadRequest.getAuthor();
+		this.isbn = uploadRequest.getIsbn();
 	}
+
 }

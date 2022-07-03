@@ -6,6 +6,6 @@ import com.ttukttak.book.entity.BookInfo;
 
 public interface BookInfoRepository extends JpaRepository<BookInfo, Long> {
 
-	Boolean existsByIsbn(String isbn);
+	BookInfo findByIsbn(String isbn);
 
 }

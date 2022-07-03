@@ -22,4 +22,6 @@ public class BookStatus {
 
 	@Enumerated(EnumType.STRING)
 	private BookStatusType status;
+
+	private Double ratio;
 }

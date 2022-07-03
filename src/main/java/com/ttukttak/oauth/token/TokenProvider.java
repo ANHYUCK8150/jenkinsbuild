@@ -2,12 +2,11 @@ package com.ttukttak.oauth.token;
 
 import java.util.Date;
 
-import javax.security.auth.message.AuthException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.ttukttak.common.config.AppProperties;
 import com.ttukttak.oauth.entity.UserPrincipal;
@@ -59,25 +58,33 @@ public class TokenProvider {
 		return Long.parseLong(claims.getSubject());
 	}
 
-	public boolean validateToken(String authToken) throws AuthException {
+	public String getJwtFromHeader(String token) {
+		if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+			return token.substring(7, token.length());
+		}
+		return null;
+	}
+
+	public boolean validateToken(String authToken) {
 		try {
 			Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(authToken);
 			return true;
 		} catch (SignatureException ex) {
+			logger.error("유효하지 않은 JWT 서명");
 			this.jwtMsg = "유효하지 않은 JWT 서명";
-			throw new AuthException("유효하지 않은 JWT 서명");
 		} catch (MalformedJwtException ex) {
+			logger.error("유효하지 않은 JWT 토큰");
 			this.jwtMsg = "유효하지 않은 JWT 토큰";
-			throw new AuthException("유효하지 않은 JWT 토큰");
 		} catch (ExpiredJwtException ex) {
+			logger.error("만료된 JWT 토큰");
 			this.jwtMsg = "만료된 JWT 토큰";
-			throw new AuthException("만료된 JWT 토큰");
 		} catch (UnsupportedJwtException ex) {
+			logger.error("지원하지 않는 JWT 토큰");
 			this.jwtMsg = "지원하지 않는 JWT 토큰";
-			throw new AuthException("지원하지 않는 JWT 토큰");
 		} catch (IllegalArgumentException ex) {
+			logger.error("비어있는 JWT");
 			this.jwtMsg = "비어있는 JWT";
-			throw new AuthException("비어있는 JWT");
 		}
+		return false;
 	}
 }

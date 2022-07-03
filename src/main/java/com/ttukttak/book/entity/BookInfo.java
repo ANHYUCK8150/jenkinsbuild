@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.ttukttak.book.dto.BookInfoDto;
 import com.ttukttak.common.BaseTimeEntity;
 
 import lombok.Builder;
@@ -54,16 +55,16 @@ public class BookInfo extends BaseTimeEntity {
 		this.isbn = isbn;
 	}
 
-	public static BookInfo of(BookInfo bookInfo) {
+	public static BookInfo of(BookInfoDto bookInfoDto) {
 		return BookInfo.builder()
-			.name(bookInfo.getName())
-			.description(bookInfo.getDescription())
-			.publishedDate(bookInfo.getPublishedDate())
-			.price(bookInfo.getPrice())
-			.image(bookInfo.getImage())
-			.publisher(bookInfo.getPublisher())
-			.author(bookInfo.getAuthor())
-			.isbn(bookInfo.getIsbn())
+			.name(bookInfoDto.getName())
+			.description(bookInfoDto.getDescription())
+			.publishedDate(bookInfoDto.getPublishedDate())
+			.price(bookInfoDto.getPrice())
+			.image(bookInfoDto.getImage())
+			.publisher(bookInfoDto.getPublisher())
+			.author(bookInfoDto.getAuthor())
+			.isbn(bookInfoDto.getIsbn())
 			.build();
 	}
 }
